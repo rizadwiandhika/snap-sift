@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.rizadwi.snapsift.common.base.BaseFragment
 import com.rizadwi.snapsift.common.wrapper.UIState
@@ -17,7 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SourceFragment : BaseFragment<FragmentSourceBinding>() {
+class SourceFragment(private val fragmentReplacer: (Fragment) -> Unit) :
+    BaseFragment<FragmentSourceBinding>() {
     private val viewModel: SourceViewModel by viewModels()
 
     @Inject
@@ -97,7 +99,8 @@ class SourceFragment : BaseFragment<FragmentSourceBinding>() {
     }
 
     private fun handleSourceClicked(source: Source) {
-        Toast.makeText(requireContext(), "Clicked on ${source.name}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Clicked on ${source.id}", Toast.LENGTH_SHORT).show()
+        fragmentReplacer.invoke(ArticleFragment(source.id))
     }
 
 }
