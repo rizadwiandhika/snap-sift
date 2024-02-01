@@ -1,6 +1,5 @@
 package com.rizadwi.snapsift.presentation.fragment
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,18 +9,18 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.rizadwi.snapsift.common.base.BaseFragment
 import com.rizadwi.snapsift.common.wrapper.UIState
 import com.rizadwi.snapsift.databinding.FragmentArticleBinding
 import com.rizadwi.snapsift.model.Article
-import com.rizadwi.snapsift.presentation.WebViewActivity
 import com.rizadwi.snapsift.presentation.adapter.ArticleAdapter
 import com.rizadwi.snapsift.viewmodel.ArticleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ArticleFragment(private val source: String) : BaseFragment<FragmentArticleBinding>(),
+class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
     OnQueryTextListener, OnScrollChangeListener {
 
     private val viewModel: ArticleViewModel by viewModels()
@@ -44,6 +43,8 @@ class ArticleFragment(private val source: String) : BaseFragment<FragmentArticle
     }
 
     private fun setupUI() {
+        val source = ArticleFragmentArgs.fromBundle(arguments as Bundle).source
+
         viewModel.setSources(source)
 
         articleAdapter.setOnItemClickListener(::moveToWebView)
@@ -56,11 +57,9 @@ class ArticleFragment(private val source: String) : BaseFragment<FragmentArticle
     }
 
     private fun moveToWebView(article: Article) {
-        val activity = requireActivity()
-        val intent = Intent(activity, WebViewActivity::class.java).also {
-            it.putExtra(WebViewActivity.URL_KEY, article.url)
-        }
-        activity.startActivity(intent)
+        val toWebViewFragment =
+            ArticleFragmentDirections.actionArticleFragmentToWebViewFragment(article.url ?: "")
+        findNavController().navigate(toWebViewFragment)
     }
 
     private fun observeViewModel() {

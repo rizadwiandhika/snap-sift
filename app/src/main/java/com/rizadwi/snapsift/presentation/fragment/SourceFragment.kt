@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.rizadwi.snapsift.common.base.BaseFragment
 import com.rizadwi.snapsift.common.wrapper.UIState
 import com.rizadwi.snapsift.databinding.FragmentSourceBinding
@@ -18,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SourceFragment(private val fragmentReplacer: (Fragment) -> Unit) :
+class SourceFragment :
     BaseFragment<FragmentSourceBinding>() {
     private val viewModel: SourceViewModel by viewModels()
 
@@ -99,8 +98,9 @@ class SourceFragment(private val fragmentReplacer: (Fragment) -> Unit) :
     }
 
     private fun handleSourceClicked(source: Source) {
-        Toast.makeText(requireContext(), "Clicked on ${source.id}", Toast.LENGTH_SHORT).show()
-        fragmentReplacer.invoke(ArticleFragment(source.id))
+        val toArticleFragment =
+            SourceFragmentDirections.actionSourceFragmentToArticleFragment(source.id)
+        findNavController().navigate(toArticleFragment)
     }
 
 }

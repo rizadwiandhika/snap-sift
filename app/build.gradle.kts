@@ -3,7 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("androidx.navigation.safeargs")
 }
+
 
 android {
     namespace = "com.rizadwi.snapsift"
@@ -79,6 +81,11 @@ dependencies {
 
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // Fragment navigation graph
+    val nav_version = "2.7.6"
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
 }
 
 kapt {
