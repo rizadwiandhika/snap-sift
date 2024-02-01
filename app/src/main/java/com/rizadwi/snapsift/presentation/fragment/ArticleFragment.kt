@@ -21,7 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ArticleFragment(private val source: String) : BaseFragment<FragmentArticleBinding>(),
+class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
     OnQueryTextListener, OnScrollChangeListener {
 
     private val viewModel: ArticleViewModel by viewModels()
@@ -44,6 +44,8 @@ class ArticleFragment(private val source: String) : BaseFragment<FragmentArticle
     }
 
     private fun setupUI() {
+        val source = ArticleFragmentArgs.fromBundle(arguments as Bundle).source
+
         viewModel.setSources(source)
 
         articleAdapter.setOnItemClickListener(::moveToWebView)
