@@ -11,6 +11,9 @@
         <argument
             android:name="source"
             app:argType="string" />
+        <action
+            android:id="@+id/action_articleFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
     </fragment>
     <fragment
         android:id="@+id/sourceFragment"
@@ -19,5 +22,13 @@
         <action
             android:id="@+id/action_sourceFragment_to_articleFragment"
             app:destination="@id/articleFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.rizadwi.snapsift.presentation.WebViewFragment"
+        android:label="WebViewFragment">
+        <argument
+            android:name="url"
+            app:argType="string" />
     </fragment>
 </navigation>

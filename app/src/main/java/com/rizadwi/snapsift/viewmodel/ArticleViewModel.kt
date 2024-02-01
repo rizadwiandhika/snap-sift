@@ -1,6 +1,5 @@
 package com.rizadwi.snapsift.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -27,7 +26,7 @@ class ArticleViewModel @Inject constructor(private val getHeadlineArticlesUserCa
     private val _articleLiveData = MutableLiveData<UIState<List<Article>>>()
     private val _freshArticleLiveData = MutableLiveData<UIState<List<Article>>>()
 
-    private var currentPage = FIRST_PAGE - 1
+    private var currentPage = FIRST_PAGE
     private var query = ""
     private var sources = ""
 
@@ -70,18 +69,11 @@ class ArticleViewModel @Inject constructor(private val getHeadlineArticlesUserCa
                 return@launch
             }
 
-            this@ArticleViewModel.currentPage += 1
-            Log.d(
-                "RIZA",
-                "this@ArticleViewModel.currentPage: ${this@ArticleViewModel.currentPage}. currentPage: $currentPage"
-            )
-
             val result =
                 if (query.isBlank())
-                    getHeadlineArticlesUserCase.invoke(sources, SIZE_PER_PAGE, currentPage)
+                    getHeadlineArticlesUserCase.invoke(sources, SIZE_PER_PAGE, currentPage++)
                 else
-                    getHeadlineArticlesUserCase.invoke(query, sources, SIZE_PER_PAGE, currentPage)
-
+                    getHeadlineArticlesUserCase.invoke(query, sources, SIZE_PER_PAGE, currentPage++)
             when (result) {
                 is Result.Failure -> liveData.postError(result.cause)
                 is Result.Success -> liveData.postSuccess(result.payload)

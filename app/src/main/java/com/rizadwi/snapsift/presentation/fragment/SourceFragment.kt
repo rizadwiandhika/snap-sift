@@ -98,7 +98,6 @@ class SourceFragment :
     }
 
     private fun handleSourceClicked(source: Source) {
-//        fragmentReplacer.invoke(ArticleFragment(source.id))
         val toArticleFragment =
             SourceFragmentDirections.actionSourceFragmentToArticleFragment(source.id)
         findNavController().navigate(toArticleFragment)
