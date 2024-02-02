@@ -72,44 +72,46 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
     }
 
     private fun handleFreshData(state: UIState<List<Article>>) {
-        hideArticleLoadingError()
-        binding.rvArticle.visibility = View.GONE
+        binding.tvError.visibility = View.GONE
         when (state) {
             UIState.Pending -> binding.pbLoading.visibility = View.VISIBLE
             is UIState.Failure -> {
+                binding.pbLoading.visibility = View.GONE
                 binding.tvError.visibility = View.VISIBLE
                 binding.tvError.text = state.cause.message
             }
 
             is UIState.Success -> {
-                binding.rvArticle.visibility = View.VISIBLE
                 articleAdapter.setArticleList(state.data)
+                if (state.data.isEmpty()) {
+                    binding.pbLoading.visibility = View.GONE
+                }
             }
         }
     }
 
     private fun handleMoreData(state: UIState<List<Article>>) {
-        hideArticleLoadingError()
+        binding.tvError.visibility = View.GONE
         when (state) {
-            UIState.Pending -> Toast.makeText(
-                requireContext(),
-                "Loading more data...",
-                Toast.LENGTH_SHORT
-            ).show()
+            UIState.Pending -> {
+                binding.pbLoading.visibility = View.VISIBLE
+            }
 
             is UIState.Failure -> {
+                binding.pbLoading.visibility = View.GONE
                 binding.tvError.visibility = View.VISIBLE
                 binding.tvError.text = state.cause.message
             }
 
-            is UIState.Success -> articleAdapter.appendArticleList(state.data)
+            is UIState.Success -> {
+                articleAdapter.appendArticleList(state.data)
+                if (state.data.isEmpty()) {
+                    binding.pbLoading.visibility = View.GONE
+                }
+            }
         }
     }
 
-    private fun hideArticleLoadingError() {
-        binding.tvError.visibility = View.GONE
-        binding.pbLoading.visibility = View.GONE
-    }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         return true
@@ -131,8 +133,10 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
         val ll = scroll.getChildAt(scroll.childCount - 1) as LinearLayout
 
         // scroll.height + scrollY == ll.bottom
+        // If scroll has reach bottom
         if (ll.bottom == scroll.height + scrollY) {
             viewModel.loadMoreHeadlineArticles()
+            Toast.makeText(requireContext(), "Bottom reach!", Toast.LENGTH_SHORT).show()
         }
     }
 }
