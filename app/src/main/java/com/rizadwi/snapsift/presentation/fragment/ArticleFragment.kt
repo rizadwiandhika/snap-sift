@@ -135,7 +135,6 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
         // scroll.height + scrollY == ll.bottom
         // If scroll has reach bottom
         if (ll.bottom == scroll.height + scrollY) {
-            viewModel.loadMoreHeadlineArticles()
             Toast.makeText(requireContext(), "Bottom reach!", Toast.LENGTH_SHORT).show()
         }
     }
