@@ -13,6 +13,8 @@ import com.rizadwi.snapsift.util.extension.postError
 import com.rizadwi.snapsift.util.extension.postLoading
 import com.rizadwi.snapsift.util.extension.postSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,11 +25,28 @@ class SourceViewModel @Inject constructor(
 ) : ViewModel() {
     private val _categoryListLiveData = MutableLiveData<UIState<List<String>>>()
     private val _sourceListLiveData = MutableLiveData<UIState<List<Source>>>()
+    private val debounceFlow = MutableSharedFlow<String>()
 
     private var sourceList: MutableList<Source> = mutableListOf()
 
     val sourceListLiveData: LiveData<UIState<List<Source>>> = _sourceListLiveData
     val categoryListLiveData: LiveData<UIState<List<String>>> = _categoryListLiveData
+
+    init {
+        viewModelScope.launch {
+            debounceFlow.debounce(DELAY_DEBOUNCE_MS).collect(::filterSources)
+        }
+    }
+
+    private fun filterSources(keyword: String) {
+        if (keyword.isBlank()) {
+            _sourceListLiveData.postSuccess(sourceList)
+            return
+        }
+
+        val filteredSources = sourceList.filter { it.name.contains(keyword, true) }
+        _sourceListLiveData.postSuccess(filteredSources)
+    }
 
     fun getCategories() = viewModelScope.launch {
         _categoryListLiveData.postLoading()
@@ -62,5 +81,14 @@ class SourceViewModel @Inject constructor(
                 sourceList = it.payload.toMutableList()
             }
         }
+    }
+
+    fun prepareFilterSource(keyword: String) = viewModelScope.launch {
+        debounceFlow.emit(keyword)
+    }
+
+
+    companion object {
+        const val DELAY_DEBOUNCE_MS = 250L
     }
 }

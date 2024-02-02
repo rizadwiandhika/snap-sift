@@ -8,12 +8,33 @@
     android:paddingHorizontal="16dp"
     android:paddingTop="8dp">
 
+    <TextView
+        android:id="@+id/frameTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="News Sources"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/incSearch"
+        layout="@layout/component_search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/frameTitle" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nsvCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/incSearch">
 
         <LinearLayout
             android:layout_width="match_parent"
