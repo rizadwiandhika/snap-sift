@@ -5,6 +5,7 @@ import com.rizadwi.snapsift.datasource.repository.ArticleRepository
 import com.rizadwi.snapsift.datasource.service.NewsService
 import com.rizadwi.snapsift.model.Article
 import com.rizadwi.snapsift.util.extension.getResult
+import java.net.URLEncoder
 import javax.inject.Inject
 
 class ArticleRepositoryImpl @Inject constructor(private val newsService: NewsService) :
@@ -15,8 +16,11 @@ class ArticleRepositoryImpl @Inject constructor(private val newsService: NewsSer
         pageSize: Int,
         page: Int
     ): Result<List<Article>> {
+        val encodedQuery = URLEncoder.encode(q, Charsets.UTF_8.name())
+        val searchIn = "title"
         return try {
-            val response = newsService.getHeadlineArticles(q, sources, pageSize, page)
+            val response =
+                newsService.getHeadlineArticles(encodedQuery, searchIn, sources, pageSize, page)
             when (val it = response.getResult()) {
                 is Result.Failure -> it
                 is Result.Success -> Result.Success(it.payload.articles)

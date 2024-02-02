@@ -19,6 +19,7 @@ interface NewsService {
     @GET("everything")
     suspend fun getHeadlineArticles(
         @Query("q") q: String,
+        @Query("searchIn") searchIn: String,
         @Query("sources") sources: String,
         @Query("pageSize") pageSize: Int,
         @Query("page") page: Int,
