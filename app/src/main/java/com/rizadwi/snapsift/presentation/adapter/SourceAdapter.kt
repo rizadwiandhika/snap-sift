@@ -1,15 +1,18 @@
 package com.rizadwi.snapsift.presentation.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.rizadwi.snapsift.databinding.ItemSourceBinding
 import com.rizadwi.snapsift.model.Source
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 
-class SourceAdapter @Inject constructor() : Adapter<SourceAdapter.Holder>() {
+class SourceAdapter @Inject constructor(@ApplicationContext private val context: Context) :
+    Adapter<SourceAdapter.Holder>() {
     inner class Holder(val binding: ItemSourceBinding) : ViewHolder(binding.root)
 
     private var sourceList: List<Source> = listOf()
@@ -41,13 +44,8 @@ class SourceAdapter @Inject constructor() : Adapter<SourceAdapter.Holder>() {
             root.setOnClickListener {
                 onClicked.invoke(source)
             }
-
-            tvName.text = source.name
-            tvDescription.text = source.description
-            incCategory.tvLabel.text = source.category
-            includeLang.tvLabel.text = source.language
-            includeCountry.tvLabel.text = source.url
-
+            
+            tvSource.text = source.name
         }
     }
 }

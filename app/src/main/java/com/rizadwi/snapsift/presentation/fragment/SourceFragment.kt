@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.rizadwi.snapsift.common.base.BaseFragment
@@ -18,7 +19,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SourceFragment :
-    BaseFragment<FragmentSourceBinding>() {
+    BaseFragment<FragmentSourceBinding>(), OnQueryTextListener {
     private val viewModel: SourceViewModel by viewModels()
 
     @Inject
@@ -47,6 +48,9 @@ class SourceFragment :
 
         binding.rvSources.adapter = sourceAdapter
         binding.rvCategory.adapter = categoryAdapter
+
+        binding.incSearch.svSearchNews.queryHint = "Search source..."
+        binding.incSearch.svSearchNews.setOnQueryTextListener(this)
     }
 
     private fun handleCategoryClicked(category: String, index: Int) {
@@ -101,6 +105,15 @@ class SourceFragment :
         val toArticleFragment =
             SourceFragmentDirections.actionSourceFragmentToArticleFragment(source.id)
         findNavController().navigate(toArticleFragment)
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return true
+    }
+
+    override fun onQueryTextChange(keyword: String?): Boolean {
+        viewModel.prepareFilterSource(keyword ?: "")
+        return true
     }
 
 }

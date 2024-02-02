@@ -7,8 +7,12 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
 @ViewModelScoped
-class GetAllSourcesUseCase @Inject constructor(private val sourceRepository: SourceRepository) {
+class GetSourcesUseCase @Inject constructor(private val sourceRepository: SourceRepository) {
     suspend fun invoke(): Result<List<Source>> {
         return sourceRepository.getAll()
+    }
+
+    suspend fun invoke(category: String): Result<List<Source>> {
+        return sourceRepository.getByCategory(category)
     }
 }
