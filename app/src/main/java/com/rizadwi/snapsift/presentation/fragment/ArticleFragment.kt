@@ -6,7 +6,6 @@ import android.view.View
 import android.view.View.OnScrollChangeListener
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -135,7 +134,7 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
         // scroll.height + scrollY == ll.bottom
         // If scroll has reach bottom
         if (ll.bottom == scroll.height + scrollY) {
-            Toast.makeText(requireContext(), "Bottom reach!", Toast.LENGTH_SHORT).show()
+            viewModel.loadMoreHeadlineArticles()
         }
     }
 }
