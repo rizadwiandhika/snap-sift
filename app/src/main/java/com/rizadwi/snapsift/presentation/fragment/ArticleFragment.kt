@@ -53,7 +53,7 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
         binding.tvSource.text = source
 
         binding.scroll.setOnScrollChangeListener(this)
-        binding.svSearchNews.setOnQueryTextListener(this)
+        binding.incSearch.svSearchNews.setOnQueryTextListener(this)
     }
 
     private fun moveToWebView(article: Article) {
