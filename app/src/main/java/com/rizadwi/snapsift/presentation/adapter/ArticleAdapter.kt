@@ -9,11 +9,15 @@ import com.bumptech.glide.Glide
 import com.rizadwi.snapsift.R
 import com.rizadwi.snapsift.databinding.ItemArticleBinding
 import com.rizadwi.snapsift.model.Article
+import com.rizadwi.snapsift.util.Clipper
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 
-class ArticleAdapter @Inject constructor(@ApplicationContext private val context: Context) :
+class ArticleAdapter @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val clipper: Clipper
+) :
     Adapter<ArticleAdapter.Holder>() {
     inner class Holder(val binding: ItemArticleBinding) : ViewHolder(binding.root)
 
@@ -62,10 +66,15 @@ class ArticleAdapter @Inject constructor(@ApplicationContext private val context
                 .placeholder(R.drawable.pic_placeholder)
                 .into(ivThumbnail)
 
-            tvTitle.text = source.title
+            tvTitle.text = clipper.clip(source.title ?: "", MAX_TITLE_LENGTH)
             tvSource.text = source.source?.name ?: "Unknown source"
             tvAuthor.text = source.author
-            tvDescription.text = source.description
+            tvDescription.text = clipper.clip(source.description ?: "", MAX_DESCRIPTION_LENGTH)
         }
+    }
+
+    companion object {
+        const val MAX_TITLE_LENGTH = 48
+        const val MAX_DESCRIPTION_LENGTH = 96
     }
 }
