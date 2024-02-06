@@ -1,7 +1,6 @@
 package com.rizadwi.snapsift.presentation.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -28,14 +27,12 @@ class ArticleAdapter @Inject constructor(@ApplicationContext private val context
 
     fun appendArticleList(data: List<Article>) {
         if (data.isEmpty()) {
-            Log.d("RIZA", "new data size is empty, Skipping...")
             return
         }
 
         val prevTotal = articleList.size
         articleList.addAll(data)
 
-        Log.d("RIZA", "new data size: ${data.size}. article list size: ${articleList.size}")
         notifyItemRangeInserted(prevTotal, data.size)
     }
 
