@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/rounded_md_white"
-    android:padding="12dp">
+    android:layout_margin="12dp"
+    android:background="@color/white">
 
 
     <com.google.android.material.card.MaterialCardView
@@ -19,8 +19,9 @@
         <TextView
             android:id="@+id/tvSource"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
+            android:background="@drawable/touch_effect"
+            android:gravity="center"
             android:padding="4dp"
             android:text="BBC News"
             android:textAlignment="center" />
