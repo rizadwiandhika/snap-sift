@@ -3,12 +3,11 @@ package com.rizadwi.snapsift.presentation.fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnScrollChangeListener
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.rizadwi.snapsift.common.base.BaseFragment
 import com.rizadwi.snapsift.common.wrapper.UIState
 import com.rizadwi.snapsift.databinding.FragmentArticleBinding
@@ -20,7 +19,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
-    OnQueryTextListener, OnScrollChangeListener {
+    OnQueryTextListener {
 
     private val viewModel: ArticleViewModel by viewModels()
 
@@ -46,13 +45,20 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
 
         viewModel.setSources(source)
 
-        articleAdapter.setOnItemClickListener(::moveToWebView)
-
         binding.rvArticle.adapter = articleAdapter
         binding.tvSource.text = source
 
-        binding.scroll.setOnScrollChangeListener(this)
         binding.incSearch.svSearchNews.setOnQueryTextListener(this)
+        articleAdapter.setOnItemClickListener(::moveToWebView)
+        binding.rvArticle.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (!recyclerView.canScrollVertically(1)) {
+                    viewModel.loadMoreHeadlineArticles()
+                }
+            }
+        })
     }
 
     private fun moveToWebView(article: Article) {
@@ -67,7 +73,7 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
     }
 
     private fun fetchData() {
-        viewModel.loadFreshHeadlineArticles()
+        viewModel.loadFromCacheIfPossible()
     }
 
     private fun handleFreshData(state: UIState<List<Article>>) {
@@ -121,20 +127,4 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
         return true
     }
 
-    override fun onScrollChange(
-        v: View?,
-        scrollX: Int,
-        scrollY: Int,
-        oldScrollX: Int,
-        oldScrollY: Int
-    ) {
-        val scroll = binding.scroll
-        val ll = scroll.getChildAt(scroll.childCount - 1) as LinearLayout
-
-        // scroll.height + scrollY == ll.bottom
-        // If scroll has reach bottom
-        if (ll.bottom == scroll.height + scrollY) {
-            viewModel.loadMoreHeadlineArticles()
-        }
-    }
 }
