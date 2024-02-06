@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle" >
 
-    <solid android:color="#ffffff" />
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background shape -->
+    <item android:drawable="@drawable/rounded_md_white_base"/>
 
-    <corners
-        android:bottomLeftRadius="12dp"
-        android:bottomRightRadius="12dp"
-        android:topLeftRadius="12dp"
-        android:topRightRadius="12dp" />
+    <!-- Ripple effect -->
+    <item android:id="@android:id/background">
+        <ripple android:color="@color/gray">
+            <item android:id="@android:id/mask">
+                <shape android:shape="rectangle">
+                    <solid android:color="@android:color/darker_gray" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
 
-</shape>
+</layer-list>
