@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.rizadwi.snapsift.common.base.BaseFragment
@@ -35,12 +36,15 @@ class WebViewFragment : BaseFragment<FragmentWebviewBinding>() {
             return
         }
 
-        binding.progressBar.isIndeterminate = false
-        binding.webView.webChromeClient = getWebChromeClient()
-        binding.webView.settings.javaScriptEnabled = true
-        binding.tvBarUrl.text = clipper.clip(url, MAX_URL_LENGTH)
-        binding.close.setOnClickListener { findNavController().popBackStack() }
-        binding.webView.loadUrl(url)
+        with(binding) {
+            progressBar.isIndeterminate = false
+            webView.webViewClient = getWebViewClient()
+            webView.webChromeClient = getWebChromeClient()
+            webView.settings.javaScriptEnabled = true
+            tvBarUrl.text = clipper.clip(url, MAX_URL_LENGTH)
+            close.setOnClickListener { findNavController().popBackStack() }
+            webView.loadUrl(url)
+        }
     }
 
     private fun getWebChromeClient(): WebChromeClient {
@@ -48,13 +52,24 @@ class WebViewFragment : BaseFragment<FragmentWebviewBinding>() {
             override fun onProgressChanged(view: WebView?, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 binding.progressBar.setProgress(newProgress, true)
+                binding.tvBarTitle.text = clipper.clip(view?.title ?: "", MAX_TITLE_LENGTH)
 
                 if (newProgress == 100) {
                     binding.progressBar.visibility = View.GONE
-                    binding.tvBarTitle.text = clipper.clip(view?.title ?: "", MAX_TITLE_LENGTH)
                 }
             }
+        }
+    }
 
+    private fun getWebViewClient(): WebViewClient {
+        return object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                url: String
+            ): Boolean {
+                binding.tvBarUrl.text = clipper.clip(url, MAX_URL_LENGTH)
+                return false
+            }
         }
     }
 
