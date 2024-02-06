@@ -23,6 +23,7 @@ class SourceViewModel @Inject constructor(
     private val getSourcesUseCase: GetSourcesUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase
 ) : ViewModel() {
+    private var selectedCategory: String = "all"
     private val _categoryListLiveData = MutableLiveData<UIState<List<String>>>()
     private val _sourceListLiveData = MutableLiveData<UIState<List<Source>>>()
     private val debounceFlow = MutableSharedFlow<String>()
@@ -37,6 +38,7 @@ class SourceViewModel @Inject constructor(
             debounceFlow.debounce(DELAY_DEBOUNCE_MS).collect(::filterSources)
         }
     }
+
 
     private fun filterSources(keyword: String) {
         if (keyword.isBlank()) {
@@ -56,7 +58,15 @@ class SourceViewModel @Inject constructor(
         }
     }
 
-    fun getAllSources() = viewModelScope.launch {
+    fun getSourcesFromCacheIfPossible() = viewModelScope.launch {
+        if (selectedCategory.isNotBlank()) {
+            getSourcesByCategory(selectedCategory)
+        } else {
+            getAllSources()
+        }
+    }
+
+    private fun getAllSources() = viewModelScope.launch {
         _sourceListLiveData.postLoading()
         when (val it = getSourcesUseCase.invoke()) {
             is Result.Failure -> _sourceListLiveData.postError(it.cause)
@@ -68,6 +78,7 @@ class SourceViewModel @Inject constructor(
     }
 
     fun getSourcesByCategory(category: String) = viewModelScope.launch {
+        selectedCategory = category
         if (category == "all") {
             getAllSources()
             return@launch

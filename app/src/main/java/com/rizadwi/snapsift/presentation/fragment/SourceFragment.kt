@@ -43,13 +43,12 @@ class SourceFragment :
     }
 
     private fun setupUI() {
-        sourceAdapter.setOnItemClickListener(::handleSourceClicked)
-        categoryAdapter.setOnCategoryClickListener(::handleCategoryClicked)
-
         binding.rvSources.adapter = sourceAdapter
         binding.rvCategory.adapter = categoryAdapter
 
         binding.incSearch.svSearchNews.queryHint = "Search source..."
+        sourceAdapter.setOnItemClickListener(::handleSourceClicked)
+        categoryAdapter.setOnCategoryClickListener(::handleCategoryClicked)
         binding.incSearch.svSearchNews.setOnQueryTextListener(this)
     }
 
@@ -89,7 +88,7 @@ class SourceFragment :
 
     private fun fetchData() {
         viewModel.getCategories()
-        viewModel.getAllSources()
+        viewModel.getSourcesFromCacheIfPossible()
     }
 
 
