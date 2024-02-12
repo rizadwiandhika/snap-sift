@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 import com.rizadwi.snapsift.common.base.BaseFragment
 import com.rizadwi.snapsift.common.wrapper.UIState
 import com.rizadwi.snapsift.databinding.FragmentArticleBinding
@@ -34,6 +36,7 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
         return FragmentArticleBinding.inflate(inflater, container, false)
     }
 
+
     override fun setupView(view: View, savedInstanceState: Bundle?) {
         setupUI()
         observeViewModel()
@@ -45,7 +48,11 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
 
         viewModel.setSources(source)
 
+        binding.rvArticle.layoutManager = LinearLayoutManager(requireContext())
+
+        articleAdapter.stateRestorationPolicy = PREVENT_WHEN_EMPTY
         binding.rvArticle.adapter = articleAdapter
+
         binding.tvSource.text = source
 
         binding.incSearch.svSearchNews.setOnQueryTextListener(this)
@@ -123,7 +130,9 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        viewModel.changeQueryThenLoadFreshHeadlineArticles(newText ?: "")
+        if (binding.incSearch.svSearchNews.hasFocus()) {
+            viewModel.changeQueryThenLoadFreshHeadlineArticles(newText ?: "")
+        }
         return true
     }
 
