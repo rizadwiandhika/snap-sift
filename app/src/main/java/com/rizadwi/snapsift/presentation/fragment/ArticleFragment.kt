@@ -47,16 +47,13 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
         val source = ArticleFragmentArgs.fromBundle(arguments as Bundle).source
 
         viewModel.setSources(source)
-
-        binding.rvArticle.layoutManager = LinearLayoutManager(requireContext())
-
         articleAdapter.stateRestorationPolicy = PREVENT_WHEN_EMPTY
-        binding.rvArticle.adapter = articleAdapter
+        articleAdapter.setOnItemClickListener(::moveToWebView)
 
         binding.tvSource.text = source
-
         binding.incSearch.svSearchNews.setOnQueryTextListener(this)
-        articleAdapter.setOnItemClickListener(::moveToWebView)
+        binding.rvArticle.adapter = articleAdapter
+        binding.rvArticle.layoutManager = LinearLayoutManager(requireContext())
         binding.rvArticle.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -130,9 +127,7 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        if (binding.incSearch.svSearchNews.hasFocus()) {
-            viewModel.changeQueryThenLoadFreshHeadlineArticles(newText ?: "")
-        }
+        newText?.let(viewModel::changeQueryThenLoadFreshHeadlineArticles)
         return true
     }
 
