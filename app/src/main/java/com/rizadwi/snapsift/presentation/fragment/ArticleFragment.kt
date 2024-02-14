@@ -25,6 +25,8 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
 
     private val viewModel: ArticleViewModel by viewModels()
 
+    private val scrollListener = ArticleNewsScrollListener()
+
     @Inject
     lateinit var articleAdapter: ArticleAdapter
 
@@ -54,15 +56,7 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
         binding.incSearch.svSearchNews.setOnQueryTextListener(this)
         binding.rvArticle.adapter = articleAdapter
         binding.rvArticle.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvArticle.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                if (!recyclerView.canScrollVertically(1)) {
-                    viewModel.loadMoreHeadlineArticles()
-                }
-            }
-        })
+        binding.rvArticle.addOnScrollListener(scrollListener)
     }
 
     private fun moveToWebView(article: Article) {
@@ -130,5 +124,19 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
         newText?.let(viewModel::changeQueryThenLoadFreshHeadlineArticles)
         return true
     }
+
+    inner class ArticleNewsScrollListener : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            if (!recyclerView.canScrollVertically(DOWNWARD)) {
+                viewModel.loadMoreHeadlineArticles()
+            }
+        }
+    }
+
+    companion object {
+        const val DOWNWARD = 1
+    }
+
 
 }
