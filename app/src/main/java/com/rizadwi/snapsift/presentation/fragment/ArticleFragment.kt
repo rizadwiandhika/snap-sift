@@ -25,6 +25,8 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
 
     private val viewModel: ArticleViewModel by viewModels()
 
+    private val scrollListener = ArticleNewsScrollListener()
+
     @Inject
     lateinit var articleAdapter: ArticleAdapter
 
@@ -47,25 +49,14 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
         val source = ArticleFragmentArgs.fromBundle(arguments as Bundle).source
 
         viewModel.setSources(source)
-
-        binding.rvArticle.layoutManager = LinearLayoutManager(requireContext())
-
         articleAdapter.stateRestorationPolicy = PREVENT_WHEN_EMPTY
-        binding.rvArticle.adapter = articleAdapter
+        articleAdapter.setOnItemClickListener(::moveToWebView)
 
         binding.tvSource.text = source
-
         binding.incSearch.svSearchNews.setOnQueryTextListener(this)
-        articleAdapter.setOnItemClickListener(::moveToWebView)
-        binding.rvArticle.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                if (!recyclerView.canScrollVertically(1)) {
-                    viewModel.loadMoreHeadlineArticles()
-                }
-            }
-        })
+        binding.rvArticle.adapter = articleAdapter
+        binding.rvArticle.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvArticle.addOnScrollListener(scrollListener)
     }
 
     private fun moveToWebView(article: Article) {
@@ -130,10 +121,22 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        if (binding.incSearch.svSearchNews.hasFocus()) {
-            viewModel.changeQueryThenLoadFreshHeadlineArticles(newText ?: "")
-        }
+        newText?.let(viewModel::changeQueryThenLoadFreshHeadlineArticles)
         return true
     }
+
+    inner class ArticleNewsScrollListener : RecyclerView.OnScrollListener() {
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            if (!recyclerView.canScrollVertically(DOWNWARD)) {
+                viewModel.loadMoreHeadlineArticles()
+            }
+        }
+    }
+
+    companion object {
+        const val DOWNWARD = 1
+    }
+
 
 }
