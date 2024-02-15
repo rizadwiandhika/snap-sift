@@ -9,44 +9,38 @@ import javax.inject.Inject
 
 class SourceRepositoryImpl @Inject constructor(private val service: NewsService) :
     SourceRepository {
-    override suspend fun getByCategory(category: String): Result<List<Source>> {
-        return try {
-            val response = service.getNewsSourcesByCategory(category)
-            when (val it = response.getResult()) {
-                is Result.Failure -> it
-                is Result.Success -> Result.Success(it.payload.sources)
-            }
-        } catch (t: Throwable) {
-            Result.Failure(t)
+    override suspend fun getByCategory(category: String): Result<List<Source>> = try {
+        val response = service.getNewsSourcesByCategory(category)
+        when (val it = response.getResult()) {
+            is Result.Failure -> it
+            is Result.Success -> Result.Success(it.payload.sources)
         }
-
+    } catch (t: Throwable) {
+        Result.Failure(t)
     }
 
-    override suspend fun getAll(): Result<List<Source>> {
-        return try {
-            val response = service.getNewsSources()
-            when (val it = response.getResult()) {
-                is Result.Failure -> it
-                is Result.Success -> Result.Success(it.payload.sources)
-            }
-        } catch (t: Throwable) {
-            Result.Failure(t)
+
+    override suspend fun getAll(): Result<List<Source>> = try {
+        val response = service.getNewsSources()
+        when (val it = response.getResult()) {
+            is Result.Failure -> it
+            is Result.Success -> Result.Success(it.payload.sources)
         }
+    } catch (t: Throwable) {
+        Result.Failure(t)
     }
 
-    override suspend fun getCategories(): Result<List<String>> {
-        // https://newsapi.org/docs/endpoints/sources
-        return Result.Success(
-            listOf(
-                "all",
-                "business",
-                "entertainment",
-                "general",
-                "health",
-                "science",
-                "sports",
-                "technology",
-            )
+
+    override suspend fun getCategories(): Result<List<String>> = Result.Success(
+        listOf(
+            "all",
+            "business",
+            "entertainment",
+            "general",
+            "health",
+            "science",
+            "sports",
+            "technology",
         )
-    }
+    )
 }
