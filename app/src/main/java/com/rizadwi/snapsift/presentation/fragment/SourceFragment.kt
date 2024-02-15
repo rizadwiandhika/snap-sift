@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.rizadwi.snapsift.common.base.BaseFragment
@@ -73,14 +74,14 @@ class SourceFragment :
     private fun handleSourceListData(it: UIState<List<Source>>) {
         hideSourceListUI()
         when (it) {
-            UIState.Pending -> binding.pbLoading.visibility = View.VISIBLE
+            UIState.Pending -> binding.pbLoading.isVisible = true
             is UIState.Failure -> {
-                binding.tvError.visibility = View.VISIBLE
+                binding.tvError.isVisible = true
                 binding.tvError.text = it.cause.message
             }
 
             is UIState.Success -> {
-                binding.rvSources.visibility = View.VISIBLE
+                binding.rvSources.isVisible = true
                 sourceAdapter.setSourceList(it.data)
             }
         }
@@ -94,9 +95,9 @@ class SourceFragment :
 
     private fun hideSourceListUI() {
         with(binding) {
-            pbLoading.visibility = View.GONE
-            rvSources.visibility = View.GONE
-            tvError.visibility = View.GONE
+            pbLoading.isVisible = false
+            rvSources.isVisible = false
+            tvError.isVisible = false
         }
     }
 

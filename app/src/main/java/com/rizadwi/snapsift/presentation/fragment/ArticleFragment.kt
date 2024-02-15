@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,41 +76,41 @@ class ArticleFragment : BaseFragment<FragmentArticleBinding>(),
     }
 
     private fun handleFreshData(state: UIState<List<Article>>) {
-        binding.tvError.visibility = View.GONE
+        binding.tvError.isVisible = false
         when (state) {
-            UIState.Pending -> binding.pbLoading.visibility = View.VISIBLE
+            UIState.Pending -> binding.pbLoading.isVisible = true
             is UIState.Failure -> {
-                binding.pbLoading.visibility = View.GONE
-                binding.tvError.visibility = View.VISIBLE
+                binding.pbLoading.isVisible = false
+                binding.tvError.isVisible = true
                 binding.tvError.text = state.cause.message
             }
 
             is UIState.Success -> {
                 articleAdapter.setArticleList(state.data)
                 if (state.data.isEmpty()) {
-                    binding.pbLoading.visibility = View.GONE
+                    binding.pbLoading.isVisible = false
                 }
             }
         }
     }
 
     private fun handleMoreData(state: UIState<List<Article>>) {
-        binding.tvError.visibility = View.GONE
+        binding.tvError.isVisible = false
         when (state) {
             UIState.Pending -> {
-                binding.pbLoading.visibility = View.VISIBLE
+                binding.pbLoading.isVisible = true
             }
 
             is UIState.Failure -> {
-                binding.pbLoading.visibility = View.GONE
-                binding.tvError.visibility = View.VISIBLE
+                binding.pbLoading.isVisible = false
+                binding.tvError.isVisible = true
                 binding.tvError.text = state.cause.message
             }
 
             is UIState.Success -> {
                 articleAdapter.appendArticleList(state.data)
                 if (state.data.isEmpty()) {
-                    binding.pbLoading.visibility = View.GONE
+                    binding.pbLoading.isVisible = false
                 }
             }
         }
