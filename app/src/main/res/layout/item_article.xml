@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="152dp"
+    android:background="@drawable/touch_effect"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingVertical="16dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardThumbnail"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:elevation="12dp"
+        app:cardCornerRadius="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivThumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/pic_placeholder"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.cardview.widget.CardView>
+
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:text="SEC approves bitcoin ETFs (for real this time)"
+        android:textSize="16dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cardThumbnail"
+        app:layout_constraintTop_toTopOf="@id/cardThumbnail" />
+
+
+    <TextView
+        android:id="@+id/tvSource"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="BBC News"
+        app:layout_constraintStart_toStartOf="@id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+
+    <TextView
+        android:id="@+id/tvSeparator"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:text="•"
+        app:layout_constraintStart_toEndOf="@id/tvSource"
+        app:layout_constraintTop_toTopOf="@id/tvSource" />
+
+    <TextView
+        android:id="@+id/tvAuthor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:text="Karissa Bell"
+        app:layout_constraintStart_toEndOf="@id/tvSeparator"
+        app:layout_constraintTop_toTopOf="@id/tvSource" />
+
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="4dp"
+        android:text="The Securities and Exchange Commission has approved\r\n the applications of 11 spot bitcoin ETFs in..."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cardThumbnail"
+        app:layout_constraintTop_toBottomOf="@id/tvSource" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
