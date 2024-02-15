@@ -1,6 +1,5 @@
 package com.rizadwi.snapsift.presentation.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -10,14 +9,10 @@ import com.rizadwi.snapsift.R
 import com.rizadwi.snapsift.databinding.ItemArticleBinding
 import com.rizadwi.snapsift.model.Article
 import com.rizadwi.snapsift.util.Clipper
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 
-class ArticleAdapter @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val clipper: Clipper
-) :
+class ArticleAdapter @Inject constructor(private val clipper: Clipper) :
     Adapter<ArticleAdapter.Holder>() {
     inner class Holder(val binding: ItemArticleBinding) : ViewHolder(binding.root)
 
@@ -60,7 +55,7 @@ class ArticleAdapter @Inject constructor(
                 onClicked.invoke(source)
             }
 
-            Glide.with(context)
+            Glide.with(root)
                 .load(source.urlToImage)
                 .centerCrop()
                 .placeholder(R.drawable.pic_placeholder)
