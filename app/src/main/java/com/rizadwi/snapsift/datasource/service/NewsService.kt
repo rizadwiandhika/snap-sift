@@ -5,6 +5,7 @@ import com.rizadwi.snapsift.datasource.service.dto.response.SourceResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.QueryMap
 
 interface NewsService {
 
@@ -17,18 +18,6 @@ interface NewsService {
     suspend fun getNewsSources(): Response<SourceResponse>
 
     @GET("everything")
-    suspend fun getHeadlineArticles(
-        @Query("q") q: String,
-        @Query("searchIn") searchIn: String,
-        @Query("sources") sources: String,
-        @Query("pageSize") pageSize: Int,
-        @Query("page") page: Int,
-    ): Response<ArticleResponse>
+    suspend fun getHeadlineArticles(@QueryMap(encoded = false) map: Map<String, String>): Response<ArticleResponse>
 
-    @GET("everything")
-    suspend fun getHeadlineArticles(
-        @Query("sources") sources: String,
-        @Query("pageSize") pageSize: Int,
-        @Query("page") page: Int,
-    ): Response<ArticleResponse>
 }
