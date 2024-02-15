@@ -41,6 +41,7 @@ class ArticleRepositoryImpl @Inject constructor(private val newsService: NewsSer
     private suspend fun getHeadlineArticles(map: Map<String, String>) = try {
         val response =
             newsService.getHeadlineArticles(map)
+
         when (val it = response.getResult()) {
             is Result.Failure -> it
             is Result.Success -> Result.Success(it.payload.articles)
