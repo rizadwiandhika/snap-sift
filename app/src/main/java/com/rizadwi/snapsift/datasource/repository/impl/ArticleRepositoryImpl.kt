@@ -34,15 +34,13 @@ class ArticleRepositoryImpl @Inject constructor(private val newsService: NewsSer
         sources: String,
         pageSize: Int,
         page: Int
-    ): Result<List<Article>> {
-        return try {
-            val response = newsService.getHeadlineArticles(sources, pageSize, page)
-            when (val it = response.getResult()) {
-                is Result.Failure -> it
-                is Result.Success -> Result.Success(it.payload.articles)
-            }
-        } catch (t: Throwable) {
-            Result.Failure(t)
+    ): Result<List<Article>> = try {
+        val response = newsService.getHeadlineArticles(sources, pageSize, page)
+        when (val it = response.getResult()) {
+            is Result.Failure -> it
+            is Result.Success -> Result.Success(it.payload.articles)
         }
+    } catch (t: Throwable) {
+        Result.Failure(t)
     }
 }
