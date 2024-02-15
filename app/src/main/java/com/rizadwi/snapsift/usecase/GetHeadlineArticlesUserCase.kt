@@ -3,10 +3,8 @@ package com.rizadwi.snapsift.usecase
 import com.rizadwi.snapsift.common.wrapper.Result
 import com.rizadwi.snapsift.datasource.repository.ArticleRepository
 import com.rizadwi.snapsift.model.Article
-import dagger.hilt.android.scopes.ViewModelScoped
 import javax.inject.Inject
 
-@ViewModelScoped
 class GetHeadlineArticlesUserCase @Inject constructor(private val articleRepository: ArticleRepository) {
     suspend fun invoke(
         q: String,
