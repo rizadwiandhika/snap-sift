@@ -15,32 +15,42 @@ class ArticleRepositoryImpl @Inject constructor(private val newsService: NewsSer
         sources: String,
         pageSize: Int,
         page: Int
-    ): Result<List<Article>> {
-        val encodedQuery = URLEncoder.encode(q, Charsets.UTF_8.name())
-        val searchIn = "title"
-        return try {
-            val response =
-                newsService.getHeadlineArticles(encodedQuery, searchIn, sources, pageSize, page)
-            when (val it = response.getResult()) {
-                is Result.Failure -> it
-                is Result.Success -> Result.Success(it.payload.articles)
-            }
-        } catch (t: Throwable) {
-            Result.Failure(t)
-        }
-    }
+    ): Result<List<Article>> = getHeadlineArticles(
+        mapOf(
+            "q" to URLEncoder.encode(q, Charsets.UTF_8.name()),
+            "searchIn" to SEARCH_IN,
+            "sources" to sources,
+            "pageSize" to pageSize.toString(),
+            "page" to page.toString(),
+        )
+    )
 
     override suspend fun getHeadlineArticles(
         sources: String,
         pageSize: Int,
         page: Int
-    ): Result<List<Article>> = try {
-        val response = newsService.getHeadlineArticles(sources, pageSize, page)
+    ): Result<List<Article>> = getHeadlineArticles(
+        mapOf(
+            "searchIn" to SEARCH_IN,
+            "sources" to sources,
+            "pageSize" to pageSize.toString(),
+            "page" to page.toString(),
+        )
+    )
+
+    private suspend fun getHeadlineArticles(map: Map<String, String>) = try {
+        val response =
+            newsService.getHeadlineArticles(map)
+
         when (val it = response.getResult()) {
             is Result.Failure -> it
             is Result.Success -> Result.Success(it.payload.articles)
         }
     } catch (t: Throwable) {
         Result.Failure(t)
+    }
+
+    companion object {
+        const val SEARCH_IN = "title"
     }
 }
