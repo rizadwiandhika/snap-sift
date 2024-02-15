@@ -8,6 +8,7 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.rizadwi.snapsift.common.base.BaseFragment
 import com.rizadwi.snapsift.databinding.FragmentWebviewBinding
@@ -55,7 +56,7 @@ class WebViewFragment : BaseFragment<FragmentWebviewBinding>() {
                 binding.tvBarTitle.text = clipper.clip(view?.title ?: "", MAX_TITLE_LENGTH)
 
                 if (newProgress == 100) {
-                    binding.progressBar.visibility = View.GONE
+                    binding.progressBar.isVisible = false
                 }
             }
         }
